@@ -113,10 +113,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;op
 .progress i{display:block;height:100%;background:var(--green);border-radius:999px}
 .placeholder-note{border:1px dashed rgba(93,111,55,.35);background:#FAF5E9;border-radius:18px;padding:20px;color:var(--muted);font-weight:800;text-align:center;line-height:1.8}
 
-.stamp-overview{height:210px;border-radius:22px;background:#F8F0DF url('images/stamps.png') center/cover no-repeat;border:1px solid var(--line);box-shadow:var(--soft-shadow);margin-top:20px;position:relative;overflow:hidden;cursor:pointer}
-.stamp-overview::after{content:'全部印章';position:absolute;left:16px;bottom:14px;background:rgba(255,253,247,.84);color:var(--deep);border-radius:999px;padding:8px 12px;font-weight:900;backdrop-filter:blur(8px)}
-.stamp-upload-hint{position:absolute;right:16px;top:14px;background:rgba(255,253,247,.84);color:var(--muted);border-radius:999px;padding:8px 12px;font-weight:900;font-size:.78rem;backdrop-filter:blur(8px)}
-.stamp-caption{margin:10px 0 18px;color:var(--muted);font-size:.86rem;line-height:1.7;font-weight:800}
+.stamp-overview{height:260px;border-radius:22px;background:#F8F0DF url('images/stamps.png') center/contain no-repeat;border:1px solid var(--line);box-shadow:var(--soft-shadow);margin-top:20px;overflow:hidden}
 
 .story-community{display:grid;grid-template-columns:1.25fr .75fr;gap:24px}
 .story-card{min-height:360px;border-radius:28px;overflow:hidden;position:relative;background:linear-gradient(135deg,#6B7D46,#334322);background-image:linear-gradient(90deg,rgba(31,39,23,.78),rgba(31,39,23,.15)),url('images/阿聰.jpg');background-size:cover;background-position:center;color:white;box-shadow:var(--soft-shadow);cursor:pointer}
@@ -280,8 +277,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;op
           <div class="stat"><strong>3</strong><span>拜訪地點</span></div>
           <div class="stat"><strong>2</strong><span>參與季節</span></div>
         </div>
-        <div class="stamp-overview" onclick="openStampGallery()"><span class="stamp-upload-hint">放 images/stamps.png</span></div>
-        <p class="stamp-caption">這裡放「全部印章總覽圖」，檔名：<b>images/stamps.png</b>。點擊可進入完整介紹。</p>
+        <div class="stamp-overview"></div>
         <div class="passport-cover"><h3>農村護照</h3><p>RURAL HEALING PASSPORT</p></div>
       </div>
       <div class="glass-card">
@@ -447,11 +443,6 @@ function setLang(lang,btn){
   if(ln){
     ln.textContent=t.name; document.getElementById('labelEmail').textContent=t.email; document.getElementById('labelDate').textContent=t.date; document.getElementById('labelPeople').textContent=t.people; document.getElementById('submitBooking').textContent=t.submit; document.getElementById('inputName').placeholder=lang==='zh'?'請輸入姓名':lang==='en'?'Enter your name':'名前を入力';
   }
-}
-
-function openStampGallery(){
-  details.__stampGallery={tag:'Passport｜全部印章',title:currentLang==='zh'?'全部印章':'All Stamps',desc:currentLang==='zh'?'這裡可以放你完整設計好的農村護照印章總覽圖。':currentLang==='en'?'Place your full rural passport stamp overview image here.':'ここに農村パスポートの全スタンプ一覧画像を配置できます。',img:'stamps.png',time:'Passport',stars:1,people:'所有會員',next:'點擊不同章別，可以看各章介紹與推薦下一站。',body:['這張圖建議放所有回訪章、地點章與季節章的完整設計。','檔名請使用 images/stamps.png。','圖片建議使用橫式或方形高解析圖，適合在簡報與網站中放大展示。','這裡也是使用者查看自己收集進度的核心視覺。']};
-  openDetail('__stampGallery');
 }
 
 function renderActivities(){
