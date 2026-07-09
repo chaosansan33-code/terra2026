@@ -17,6 +17,12 @@
   background-repeat: no-repeat !important;
   background-color: #24351f;
 }
+.cover-photo {
+  background-size: contain !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-color: #24351f;
+}
 </style>
 </head>
 <body>
@@ -60,7 +66,7 @@ function goCarousel(name,index,event){event?.stopPropagation();carousels[name].i
 function shiftCarousel(name,step,event){event?.stopPropagation();const c=carousels[name];if(!c.images.length)return;c.index=(c.index+step+c.images.length)%c.images.length;drawCarousel(name)}
 setInterval(()=>shiftCarousel("homeRoute",1),4200);setInterval(()=>shiftCarousel("detailTop",1),4200);setInterval(()=>shiftCarousel("detailBottom",1),5200);
 function openDetail(id){const d=detailPages[id];openCustom(d.tag[lang],d[lang][0],d[lang][1],d.img,d[lang][2],d[lang][3],d.gallery||[])}
-function openCustom(tag,title,desc,img,steps,info,gallery=[]){history.pushState({view:"detail",tag,title,desc,img,steps,info,gallery},"","#detail");renderDetail({tag,title,desc,img,steps,info,gallery})}
+function openCustom(tag,title,desc,img,steps,info,gallery=[]){const finalGallery=[img,...routeImages];history.pushState({view:"detail",tag,title,desc,img,steps,info,gallery:finalGallery},"","#detail");renderDetail({tag,title,desc,img,steps,info,gallery:finalGallery})}
 function renderDetail(d){home.classList.add("hidden");detailPage.classList.add("active");const hasGallery=Array.isArray(d.gallery)&&d.gallery.length>0;document.querySelectorAll(".detailCar").forEach(el=>el.classList.toggle("hidden",!hasGallery));if(hasGallery){carousels.detailTop.images=d.gallery;carousels.detailTop.index=0;carousels.detailBottom.images=d.gallery;carousels.detailBottom.index=0;drawCarousel("detailTop");drawCarousel("detailBottom")}else{detailHero.style.setProperty("--img",`url('images/${d.img}')`)}detailTag.textContent=d.tag;detailTitle.textContent=d.title;detailDesc.textContent=d.desc;detailContentTitle.textContent=t("detailContent");detailInfoTitle.textContent=t("info");detailSteps.innerHTML=d.steps.map((s,i)=>`<div class="step"><div class="dot">${i+1}</div><p>${s}</p></div>`).join("");detailInfo.innerHTML=d.info.map(x=>`<p><b>${x}</b></p>`).join("");scrollTo(0,0)}
 function navigateHome(id){history.pushState({view:"home",id},"","#"+id);setHome(id)}function setHome(id){detailPage.classList.remove("active");home.classList.remove("hidden");requestAnimationFrame(()=>document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"start"}));nav.classList.remove("open")}function browserBack(){history.back()}window.addEventListener("popstate",e=>{if(e.state?.view==="detail")renderDetail(e.state);else setHome(e.state?.id||"top")});history.replaceState({view:"home",id:"top"},"","#top");setLang("zh");drawCarousel("homeRoute");const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add("show")}),{threshold:.12});document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
 </script>
