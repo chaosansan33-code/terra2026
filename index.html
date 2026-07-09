@@ -24,6 +24,38 @@
   background-repeat: no-repeat !important;
   background-color: #24351f;
 }
+.hero::before {
+  background: linear-gradient(90deg,rgba(25,33,20,.58),rgba(25,33,20,.28) 43%,rgba(25,33,20,.04)),linear-gradient(0deg,var(--rice),rgba(247,239,225,0) 30%),url("images/hero.jpg") center/cover no-repeat !important;
+}
+.passport-band .stamp p {
+  color: var(--muted) !important;
+}
+.passport-band .stamp b {
+  color: var(--ink) !important;
+}
+.stamp-play-panel {
+  display: grid !important;
+  grid-template-rows: minmax(210px,1fr) auto minmax(170px,.82fr);
+  align-items: stretch !important;
+  padding: 0 !important;
+  background: #24351f !important;
+}
+.stamp-play-panel::before {
+  content: "";
+  background: url("images/stamp-play.jpg") top center/contain no-repeat;
+  min-height: 210px;
+}
+.stamp-play-panel::after {
+  content: "";
+  background: url("images/stamp-play-bottom.jpg") bottom center/cover no-repeat;
+  min-height: 170px;
+}
+.stamp-play-panel > div {
+  padding: 22px 34px;
+  align-self: center;
+  position: relative;
+  z-index: 2;
+}
 </style>
 </head>
 <body>
@@ -32,7 +64,7 @@
 <section class="hero" id="top"><div class="hero-inner"><div class="eyebrow" data-i="eyebrow"></div><h1 data-i-html="heroTitle"></h1><p data-i="heroDesc"></p><div class="actions"><button class="btn primary" onclick="navigateHome('journey')" data-i="start"></button><button class="btn ghost" onclick="navigateHome('passport')" data-i="passportBtn"></button></div></div></section>
 <section class="intro reveal"><div class="intro-grid"><div><div class="label" data-i="introLabel"></div><h2 data-i="introTitle"></h2><p data-i="introDesc"></p></div><div class="factgrid"><div class="fact"><b>5</b><span data-i="fact1"></span></div><div class="fact"><b>14</b><span data-i="fact2"></span></div><div class="fact"><b>4</b><span data-i="fact3"></span></div><div class="fact"><b>∞</b><span data-i="fact4"></span></div></div></div></section>
 <section class="section reveal" id="journey"><div class="section-head"><div><div class="label" data-i="journeyLabel"></div><h2 data-i="journeyTitle"></h2><p data-i="journeyDesc"></p></div></div><div class="journey-map"><div class="path" id="journeyPath"></div><div class="photo-panel carousel-panel" id="routePanel" style="--img:url('images/route-01.jpg')"><button class="carbtn prev" onclick="shiftCarousel('homeRoute',-1,event)">‹</button><button class="carbtn next" onclick="shiftCarousel('homeRoute',1,event)">›</button><div><h3 data-i="routeTitle"></h3><p data-i="routeDesc"></p><button class="btn ghost" onclick="openDetail('route')" data-i="routeBtn"></button><div class="dots" id="routeDots"></div></div></div></div></section>
-<section class="section reveal" id="activities"><div class="section-head"><div><div class="label" data-i="activityLabel"></div><h2 data-i="activityTitle"></h2><p data-i="activityDesc"></p></div></div><div class="feature-grid"><div class="photo-panel contain-photo" style="--img:url('images/stamp-play.jpg')"><div><h3 data-i="stampPlayTitle"></h3><p data-i="stampPlayDesc"></p><button class="btn ghost" onclick="openDetail('stampPlay')" data-i="stampPlayBtn"></button></div></div><div class="cards" id="activityCards"></div></div></section>
+<section class="section reveal" id="activities"><div class="section-head"><div><div class="label" data-i="activityLabel"></div><h2 data-i="activityTitle"></h2><p data-i="activityDesc"></p></div></div><div class="feature-grid"><div class="photo-panel contain-photo stamp-play-panel" style="--img:url('images/stamp-play.jpg')"><div><h3 data-i="stampPlayTitle"></h3><p data-i="stampPlayDesc"></p><button class="btn ghost" onclick="openDetail('stampPlay')" data-i="stampPlayBtn"></button></div></div><div class="cards" id="activityCards"></div></div></section>
 <section class="passport-band reveal" id="passport"><div class="section"><div class="section-head"><div><div class="label" data-i="passportLabel"></div><h2 data-i="passportTitle"></h2><p data-i="passportDesc"></p></div></div><div class="passport-layout"><div class="cover" onclick="openDetail('allStamps')"><div class="cover-photo"></div><div class="cover-text"><h3 data-i="passportCover"></h3><p data-i="brandSub"></p><div class="seal">14<br>STAMPS</div><p data-i="nextRecommend"></p></div></div><div><div class="stamp-tabs"><button class="active" onclick="renderStamps('visit',this)" data-i="visitTab"></button><button onclick="renderStamps('place',this)" data-i="placeTab"></button><button onclick="renderStamps('season',this)" data-i="seasonTab"></button></div><div class="stampgrid" id="stampGrid"></div><div class="reward-panel" id="rewardPanel"></div></div></div></div></section>
 <section class="section reveal" id="stories"><div class="section-head"><div><div class="label" data-i="storyLabel"></div><h2 data-i="storyTitle"></h2><p data-i="storyDesc"></p></div></div><div class="stories"><article class="storyhero" onclick="openStory('storyA')"><div><h3 id="featureStoryTitle"></h3><p id="featureStoryDesc"></p><button class="btn ghost" data-i="readStory"></button></div></article><div class="story-list" id="storyList"></div></div></section>
 <footer class="footer"><div><h2 data-i="footerTitle"></h2><p data-i="footerDesc"></p></div><button class="btn ghost" onclick="navigateHome('activities')" data-i="footerBtn"></button></footer>
@@ -60,14 +92,14 @@ function renderRewards(){rewardPanel.innerHTML=rewards[lang].map((r,i)=>`<div cl
 function openJourney(id){const j=journeys.find(x=>x.id===id);openCustom(names(j)[0],names(j)[0],j.detail[lang][0],j.img,j.detail[lang][1],j.detail[lang][2])}
 function openActivity(id){const a=activities.find(x=>x.id===id),p=tr(a);openCustom(stageLabels[a.stage][lang],p[0],a.detail[lang][0],a.img,a.detail[lang][1],a.detail[lang][2])}
 function openStory(id){const s=stories.find(x=>x.id===id),p=tr(s);openCustom(t("storyTag"),p[0],s.detail[lang][0],s.img,s.detail[lang][1],s.detail[lang][2])}
-function openStamp(type,id){const s=stampSets[type].find(x=>x[0]===id),p=stampName(s),tab=type==="visit"?t("visitTab"):type==="place"?t("placeTab"):t("seasonTab");const detail={zh:[p[1],["完成符合條件的體驗後，就能把這枚章收進護照。","章會記錄你的回訪、地點或季節進度。","累積章數可解鎖折扣、限定農產品與特殊路線。"],["章冊類型："+tab,"狀態：可集章","圖片檔名："+s[1]]],en:[p[1],["Complete an eligible experience to collect this stamp.","The stamp records your visit, place, or season progress.","Collect more stamps to unlock discounts, limited products, and hidden routes."],["Stamp type: "+tab,"Status: collectable","Image file: "+s[1]]],ja:[p[1],["条件に合う体験を完了すると、この章を集められます。","章は再訪、場所、季節の進行を記録します。","章を集めると割引、限定農産物、特別路線が解放されます。"],["章の種類："+tab,"状態：収集可能","画像ファイル："+s[1]]]};openCustom(tab,p[0],detail[lang][0],s[1],detail[lang][1],detail[lang][2])}
+function openStamp(type,id){const s=stampSets[type].find(x=>x[0]===id),p=stampName(s),tab=type==="visit"?t("visitTab"):type==="place"?t("placeTab"):t("seasonTab");const detail={zh:[p[1],["完成符合條件的體驗後，就能把這枚章收進護照。","章會記錄你的回訪、地點或季節進度。","累積章數可解鎖折扣、限定農產品與特殊路線。"],["章冊類型："+tab,"狀態：可集章","圖片檔名："+s[1]]],en:[p[1],["Complete an eligible experience to collect this stamp.","The stamp records your visit, place, or season progress.","Collect more stamps to unlock discounts, limited products, and hidden routes."],["Stamp type: "+tab,"Status: collectable","Image file: "+s[1]]],ja:[p[1],["条件に合う体験を完了すると、この章を集められます。","章は再訪、場所、季節の進行を記録します。","章を集めると割引、限定農産物、特別路線が解放されます。"],["章の種類："+tab,"状態：収集可能","画像ファイル："+s[1]]]};openCustom(tab,p[0],detail[lang][0],s[1],detail[lang][1],detail[lang][2],[],false,false)}
 const carousels={homeRoute:{images:routeImages,index:0,target:"routePanel",dots:"routeDots"},detailTop:{images:[],index:0,target:"detailHero",dots:""},detailBottom:{images:[],index:0,target:"detailGalleryPhoto",dots:"detailBottomDots"}};
 function drawCarousel(name){const c=carousels[name],el=document.getElementById(c.target);if(!el||!c.images.length)return;el.style.setProperty("--img",`url('images/${c.images[c.index]}')`);const dots=document.getElementById(c.dots);if(dots)dots.innerHTML=c.images.map((_,i)=>`<button class="${i===c.index?"active":""}" onclick="goCarousel('${name}',${i},event)"></button>`).join("")}
 function goCarousel(name,index,event){event?.stopPropagation();carousels[name].index=index;drawCarousel(name)}
 function shiftCarousel(name,step,event){event?.stopPropagation();const c=carousels[name];if(!c.images.length)return;c.index=(c.index+step+c.images.length)%c.images.length;drawCarousel(name)}
 setInterval(()=>shiftCarousel("homeRoute",1),4200);setInterval(()=>shiftCarousel("detailTop",1),4200);setInterval(()=>shiftCarousel("detailBottom",1),5200);
 function openDetail(id){const d=detailPages[id];openCustom(d.tag[lang],d[lang][0],d[lang][1],d.img,d[lang][2],d[lang][3],d.gallery||[],id==="route")}
-function openCustom(tag,title,desc,img,steps,info,gallery=[],showBottomGallery=false){const finalGallery=[img,...routeImages];history.pushState({view:"detail",tag,title,desc,img,steps,info,gallery:finalGallery,showBottomGallery},"","#detail");renderDetail({tag,title,desc,img,steps,info,gallery:finalGallery,showBottomGallery})}
+function openCustom(tag,title,desc,img,steps,info,gallery=[],showBottomGallery=false,includeOwnImage=true){const finalGallery=includeOwnImage?[img,...routeImages]:routeImages;history.pushState({view:"detail",tag,title,desc,img,steps,info,gallery:finalGallery,showBottomGallery},"","#detail");renderDetail({tag,title,desc,img,steps,info,gallery:finalGallery,showBottomGallery})}
 function renderDetail(d){home.classList.add("hidden");detailPage.classList.add("active");const hasGallery=Array.isArray(d.gallery)&&d.gallery.length>0;document.querySelectorAll(".detailCar").forEach(el=>el.classList.add("hidden"));detailGallery.classList.toggle("hidden",!d.showBottomGallery);if(hasGallery){carousels.detailTop.images=d.gallery;carousels.detailTop.index=0;drawCarousel("detailTop");if(d.showBottomGallery){carousels.detailBottom.images=d.gallery;carousels.detailBottom.index=0;drawCarousel("detailBottom")}}else{detailHero.style.setProperty("--img",`url('images/${d.img}')`)}detailTag.textContent=d.tag;detailTitle.textContent=d.title;detailDesc.textContent=d.desc;detailContentTitle.textContent=t("detailContent");detailInfoTitle.textContent=t("info");detailSteps.innerHTML=d.steps.map((s,i)=>`<div class="step"><div class="dot">${i+1}</div><p>${s}</p></div>`).join("");detailInfo.innerHTML=d.info.map(x=>`<p><b>${x}</b></p>`).join("");scrollTo(0,0)}
 function navigateHome(id){history.pushState({view:"home",id},"","#"+id);setHome(id)}function setHome(id){detailPage.classList.remove("active");home.classList.remove("hidden");requestAnimationFrame(()=>document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"start"}));nav.classList.remove("open")}function browserBack(){history.back()}window.addEventListener("popstate",e=>{if(e.state?.view==="detail")renderDetail(e.state);else setHome(e.state?.id||"top")});history.replaceState({view:"home",id:"top"},"","#top");setLang("zh");drawCarousel("homeRoute");const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add("show")}),{threshold:.12});document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
 </script>
