@@ -59,9 +59,9 @@
 .card { display: flex; flex-direction: column; }
 .card .body { display: flex; flex-direction: column; flex: 1; }
 .card .body .actions { margin-top: auto; align-items: center; justify-content: space-between; }
-.info-list { gap: 20px; }
-.info-list p { border-bottom: 0 !important; padding: 0 !important; color: #8a7d6b !important; line-height: 2.08; font-size: 1.02rem; }
-.info-list p b { font-weight: 500; }
+.info-list.no-lines { gap: 20px; }
+.info-list.no-lines p { border-bottom: 0 !important; padding: 0 !important; color: #8a7d6b !important; line-height: 2.08; font-size: 1.02rem; }
+.info-list.no-lines p b { font-weight: 500; }
 </style>
 </head>
 <body>
@@ -106,9 +106,10 @@ function shiftCarousel(name,step,event){event?.stopPropagation();const c=carouse
 setInterval(()=>shiftCarousel("homeRoute",1),4200);setInterval(()=>shiftCarousel("detailTop",1),4200);setInterval(()=>shiftCarousel("detailBottom",1),5200);
 function openDetail(id){const d=detailPages[id],infoTitle=id==="route"?{zh:"旅程理念",en:"Journey idea",ja:"旅の理念"}[lang]:id==="stampPlay"?{zh:"護照理念",en:"Passport idea",ja:"パスポート理念"}[lang]:null;openCustom(d.tag[lang],d[lang][0],d[lang][1],d.img,d[lang][2],d[lang][3],d.gallery||[],id==="route",true,infoTitle)}
 function openCustom(tag,title,desc,img,steps,info,gallery=[],showBottomGallery=false,includeOwnImage=true,infoTitle=null){const finalGallery=includeOwnImage?[img,...routeImages]:routeImages;history.pushState({view:"detail",tag,title,desc,img,steps,info,gallery:finalGallery,showBottomGallery,infoTitle},"","#detail");renderDetail({tag,title,desc,img,steps,info,gallery:finalGallery,showBottomGallery,infoTitle})}
-function renderDetail(d){home.classList.add("hidden");detailPage.classList.add("active");const hasGallery=Array.isArray(d.gallery)&&d.gallery.length>0;document.querySelectorAll(".detailCar").forEach(el=>el.classList.add("hidden"));detailGallery.classList.toggle("hidden",!d.showBottomGallery);if(hasGallery){carousels.detailTop.images=d.gallery;carousels.detailTop.index=0;drawCarousel("detailTop");if(d.showBottomGallery){carousels.detailBottom.images=d.gallery;carousels.detailBottom.index=0;drawCarousel("detailBottom")}}else{detailHero.style.setProperty("--img",`url('images/${d.img}')`)}detailTag.textContent=d.tag;detailTitle.textContent=d.title;detailDesc.textContent=d.desc;detailContentTitle.textContent=t("detailContent");detailInfoTitle.textContent=d.infoTitle||t("info");detailSteps.innerHTML=d.steps.map((s,i)=>`<div class="step"><div class="dot">${i+1}</div><p>${s}</p></div>`).join("");detailInfo.innerHTML=d.info.map(x=>`<p><b>${x}</b></p>`).join("");scrollTo(0,0)}
+function renderDetail(d){home.classList.add("hidden");detailPage.classList.add("active");const hasGallery=Array.isArray(d.gallery)&&d.gallery.length>0;document.querySelectorAll(".detailCar").forEach(el=>el.classList.add("hidden"));detailGallery.classList.toggle("hidden",!d.showBottomGallery);if(hasGallery){carousels.detailTop.images=d.gallery;carousels.detailTop.index=0;drawCarousel("detailTop");if(d.showBottomGallery){carousels.detailBottom.images=d.gallery;carousels.detailBottom.index=0;drawCarousel("detailBottom")}}else{detailHero.style.setProperty("--img",`url('images/${d.img}')`)}detailTag.textContent=d.tag;detailTitle.textContent=d.title;detailDesc.textContent=d.desc;detailContentTitle.textContent=t("detailContent");detailInfoTitle.textContent=d.infoTitle||t("info");detailInfo.classList.toggle("no-lines",Boolean(d.infoTitle));detailSteps.innerHTML=d.steps.map((s,i)=>`<div class="step"><div class="dot">${i+1}</div><p>${s}</p></div>`).join("");detailInfo.innerHTML=d.info.map(x=>`<p><b>${x}</b></p>`).join("");scrollTo(0,0)}
 function navigateHome(id){history.pushState({view:"home",id},"","#"+id);setHome(id)}function setHome(id){detailPage.classList.remove("active");home.classList.remove("hidden");requestAnimationFrame(()=>document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"start"}));nav.classList.remove("open")}function browserBack(){history.back()}window.addEventListener("popstate",e=>{if(e.state?.view==="detail")renderDetail(e.state);else setHome(e.state?.id||"top")});history.replaceState({view:"home",id:"top"},"","#top");setLang("zh");drawCarousel("homeRoute");const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add("show")}),{threshold:.12});document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
 </script>
 </body>
 </html>
+
 
